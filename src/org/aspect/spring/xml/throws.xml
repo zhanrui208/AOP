@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans  
+           http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+	<!-- more bean definitions for data access objects go here -->
+
+	<bean id="book" class="org.aspect.spring.xml.Book">
+		<property name="name" value="Effective java" />
+		<property name="url" value="www.google.cn" />
+		<property name="pages" value="300" />
+	</bean>
+
+	<!-- before advice -->
+	<bean id="beforeMethodBean" class="org.aspect.spring.xml.BeforeMethod" />
+
+	<!-- after advice -->
+	<bean id="afterMethodBean" class="org.aspect.spring.xml.AfterMethod" />
+
+	<!-- throwing advice -->
+
+	<bean id="throwException" class="org.aspect.spring.xml.ThrowException" />
+
+	<bean id="bookProxy" class="org.springframework.aop.framework.ProxyFactoryBean">
+
+		<property name="target" ref="book" />
+
+		<property name="interceptorNames">
+			<list>
+				<value>beforeMethodBean</value>
+				<value>afterMethodBean</value>
+				<value>throwException</value>
+			</list>
+		</property>
+
+	</bean>
+</beans>  

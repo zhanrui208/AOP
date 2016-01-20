@@ -1,0 +1,67 @@
+1:首先我们创建一个用户登录的接口
+
+package com.proxy.test;
+ 
+public interface UserLogin {
+    public void login(String userName);
+}
+
+2:接着创建一个接口的实现类
+
+package com.proxy.test;
+ 
+public class UserLoginImpl implements UserLogin {
+    public void login(String userName) {
+        System.out.println("欢迎 " + userName + " 登录系统");
+    }
+}
+
+3:在创建一个自己的处理类 实现InvocationHandler 接口
+
+package com.proxy.test;
+ 
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
+ 
+public class MyHandler implements InvocationHandler {
+    private Object obj;
+ 
+    public MyHandler(Object obj) {
+        this.obj = obj;
+    }
+ 
+    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+        beforeLogin(); // 登录前处理，更具自己需要来写
+ 
+        Object result = method.invoke(obj, args); // 调用真正的方法
+ 
+        afterLogin(); // 登录后处理，更具自己需要来写
+ 
+        return result;
+    }
+ 
+    public void beforeLogin() {
+        System.out.println("登录前处理");
+    }
+ 
+    public void afterLogin() {
+        System.out.println("登录后处理");
+    }
+}
+
+4:最后写一个测试类
+package com.proxy.test;
+ 
+import java.lang.reflect.Proxy;
+ 
+public class ProxyTest {
+    public static void main(String[] args) {
+        UserLoginImpl user = new UserLoginImpl(); // 得到实例对象
+        MyHandler handler = new MyHandler(user); // 将对象传入自己的处理器中
+ 
+        UserLogin proxy = (UserLogin) Proxy.newProxyInstance(user.getClass().getClassLoader(), user.getClass()
+                .getInterfaces(), handler); // 得到代理对象
+ 
+        proxy.login("张三"); // 代理调用login方法
+    }
+}

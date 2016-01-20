@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans  
+           http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+	<bean id="book" class="org.aspect.spring.xml.Book">
+		<property name="name" value="Effective java" />
+		<property name="url" value="www.google.cn" />
+		<property name="pages" value="300" />
+	</bean>
+
+	<bean id="beforeMethodBean" class="org.aspect.spring.xml.BeforeMethod" />
+
+	<bean id="afterMethodBean" class="org.aspect.spring.xml.AfterMethod" />
+
+	<bean id="bookProxy" class="org.springframework.aop.framework.ProxyFactoryBean">
+
+		<property name="target" ref="book" />
+
+		<property name="interceptorNames">
+			<list>
+				<value>beforeMethodBean</value>
+				<value>afterMethodBean</value>
+			</list>
+		</property>
+
+	</bean>
+</beans>  
